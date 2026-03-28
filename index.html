@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Safrin ❤️</title>
+    <style>
+        /* --- LOADING SCREEN --- */
+        #loader {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: #050505;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            transition: opacity 1s ease;
+        }
+
+        .heart-container {
+            position: relative;
+            width: 100px;
+            height: 90px;
+        }
+
+        .heart-outline { font-size: 100px; color: #222; position: absolute; }
+
+        .heart-fill {
+            font-size: 100px;
+            color: #ff4d6d;
+            position: absolute;
+            height: 0%; 
+            overflow: hidden;
+            transition: height 3s ease-in-out;
+            filter: drop-shadow(0 0 10px #ff4d6d);
+        }
+
+        #loading-text {
+            color: #ff4d6d;
+            font-family: 'Courier New', monospace;
+            margin-top: 110px;
+            letter-spacing: 2px;
+        }
+
+        /* --- MAIN STYLES --- */
+        body {
+            margin: 0;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #050505;
+            overflow: hidden;
+            text-align: center;
+            color: #f8f9fa;
+        }
+
+        canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; }
+
+        .card {
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(15px);
+            padding: 25px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 90%;
+            max-width: 500px;
+            max-height: 85vh;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .profile-pic {
+            width: 150px; height: 150px;
+            border-radius: 15px;
+            border: 2px solid #ff4d6d;
+            object-fit: cover;
+            margin-bottom: 15px;
+            flex-shrink: 0;
+        }
+
+        .typewriter-box {
+            font-size: 1rem;
+            line-height: 1.6;
+            text-align: left;
+            overflow-y: auto; /* Added Scrollbar */
+            padding-right: 10px;
+            margin-bottom: 10px;
+            width: 100%;
+            scrollbar-width: thin;
+            scrollbar-color: #ff4d6d #222;
+        }
+
+        .typewriter-box::-webkit-scrollbar { width: 6px; }
+        .typewriter-box::-webkit-scrollbar-track { background: #222; }
+        .typewriter-box::-webkit-scrollbar-thumb { background: #ff4d6d; border-radius: 10px; }
+
+        button {
+            background: #ff4d6d;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        button:hover { transform: scale(1.05); background: #ff1a4b; }
+
+        .hidden { display: none !important; }
+        .fade-out { opacity: 0; pointer-events: none; }
+        .love-text { color: #ff4d6d; font-weight: bold; text-align: center; }
+        .gift-box { font-size: 5rem; cursor: pointer; margin-top: 20px; animation: bounce 2s infinite; }
+        
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loader">
+        <div class="heart-container">
+            <div class="heart-outline">❤</div>
+            <div id="fill" class="heart-fill">❤</div>
+        </div>
+        <div id="loading-text">COLLECTING MOMENTS...</div>
+        <button id="entry-btn" class="hidden" onclick="closeLoader()">ENTER ❤️</button>
+    </div>
+
+    <canvas id="fireworksCanvas"></canvas>
+    
+    <audio id="birthdaySong" loop>
+        <source src="The Metro Proposal.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="card" id="slide1">
+        <img src="our photo.jpg" class="profile-pic">
+        <div id="text1" class="typewriter-box">One second... everything is ready.</div>
+        <button id="btn1" onclick="startSurprise()">Unlock ❤️</button>
+    </div>
+
+    <div class="card hidden" id="slide2">
+        <img src="2.jpg" class="profile-pic">
+        <div id="text2" class="typewriter-box"></div>
+    </div>
+
+    <div class="card hidden" id="slide3">
+        <div id="text3" class="typewriter-box love-text"></div>
+    </div>
+
+    <div class="card hidden" id="slide4">
+        <div id="gift" class="gift-box" onclick="revealShadow()">🎁</div>
+        <div id="finalContent" class="hidden">
+            <img src="3.jpg" class="profile-pic">
+            <div id="text4" class="typewriter-box"></div>
+            <button onclick="location.reload()">Replay ✨</button>
+        </div>
+    </div>
+
+    <script>
+        // Start loader
+        window.onload = () => {
+            setTimeout(() => {
+                document.getElementById('fill').style.height = "100%";
+                setTimeout(() => {
+                    document.getElementById('loading-text').innerText = "FOR SAFRIN";
+                    document.getElementById('entry-btn').classList.remove('hidden');
+                }, 3000);
+            }, 100);
+        };
+
+        // This starts the audio immediately upon clicking 'Enter'
+        function closeLoader() {
+            const song = document.getElementById("birthdaySong");
+            song.play().catch(e => console.log("Audio play deferred"));
+            
+            document.getElementById('loader').classList.add('fade-out');
+            setTimeout(() => {
+                document.getElementById('loader').style.display = "none";
+                initFireworks(); // Start fireworks in background
+            }, 1000);
+        }
+
+        const message1 = "Happy Birthday, my dear Safrin ❤️\n\nI don’t even know where to start, because you mean so much to me. Having you in my life is one of the best things that ever happened to me. You bring so much happiness, peace, and warmth into my days, and I’m truly grateful for every moment we share.\n\nYou’re not just special—you’re irreplaceable. Your smile, your kindness, the way you understand me… it all means more than I can put into words.\n\nOn your birthday, I just want you to know how deeply you are loved and appreciated. I hope this year brings you endless happiness, success, and everything your heart wishes for.";
+        
+        const message2 = "And there’s something more I want to tell you, Safrin…\n\nI don’t just want to be part of your life for today or for a moment—I want to be there in all your tomorrows. I want to stand beside you through everything, the good and the bad.\n\nI want to hold your hands forever, never letting go, no matter where life takes us. With you, everything feels right, and I just want this feeling to last a lifetime.\n\nYou are my today, my tomorrow, and everything in between 💖";
+
+        const message3 = "I LOVE YOU\n" + "I LOVE YOU ".repeat(10) + "\n" + "I LOVE YOU ".repeat(10) + "\n" + "I LOVE YOU ".repeat(10) + "\n" + "I LOVE YOU ".repeat(10) + "\n" + "I LOVE YOU ".repeat(10) + "\n\n(…and a thousand times wouldn’t still be enough to express how much I truly love you ❤️)";
+
+        const message4 = "And finally, Safrin…\n\nI want to be your shadow—always beside you, in every moment, in every step of your life. Just like a shadow never leaves, I want to stay with you through every second, every smile, every tear.\n\nNo matter where you go or what happens, I’ll always be there for you—quietly, faithfully, and forever.\n\nBecause loving you isn’t just a feeling… it’s something I want to live every single day of my life ❤️";
+
+        function typeWriter(text, elementId, callback) {
+            let i = 0;
+            const elem = document.getElementById(elementId);
+            elem.innerHTML = "";
+            function type() {
+                if (i < text.length) {
+                    elem.innerHTML += (text.charAt(i) === '\n') ? '<br>' : text.charAt(i);
+                    elem.scrollTop = elem.scrollHeight;
+                    i++;
+                    setTimeout(type, 35);
+                } else if (callback) callback();
+            }
+            type();
+        }
+
+        function startSurprise() {
+            document.getElementById("btn1").style.display = "none";
+            typeWriter(message1, "text1", () => {
+                document.getElementById("text1").innerHTML += `<br><br><button onclick="goToSlide('slide1', 'slide2', message2, 'text2', step2Callback)">Read More ➔</button>`;
+                document.getElementById("text1").scrollTop = document.getElementById("text1").scrollHeight;
+            });
+        }
+
+        function step2Callback() {
+            document.getElementById("text2").innerHTML += `<br><br><button onclick="goToSlide('slide2', 'slide3', message3, 'text3', step3Callback)">Keep Going ➔</button>`;
+            document.getElementById("text2").scrollTop = document.getElementById("text2").scrollHeight;
+        }
+
+        function step3Callback() {
+            document.getElementById("text3").innerHTML += `<br><br><button onclick="goToSlide('slide3', 'slide4')">A Final Surprise ➔</button>`;
+            document.getElementById("text3").scrollTop = document.getElementById("text3").scrollHeight;
+        }
+
+        function revealShadow() {
+            document.getElementById("gift").style.display = "none";
+            document.getElementById("finalContent").classList.remove("hidden");
+            typeWriter(message4, "text4");
+        }
+
+        function goToSlide(currentId, nextId, nextMsg, nextTextId, callback) {
+            document.getElementById(currentId).style.opacity = "0";
+            setTimeout(() => {
+                document.getElementById(currentId).classList.add("hidden");
+                document.getElementById(nextId).classList.remove("hidden");
+                if(nextMsg) typeWriter(nextMsg, nextTextId, callback);
+            }, 800);
+        }
+
+        // --- FIREWORKS ---
+        const canvas = document.getElementById('fireworksCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        function initFireworks() {
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            animate(); setInterval(createFirework, 700);
+        }
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x; this.y = y; this.color = color;
+                this.velocity = { x: (Math.random() - 0.5) * 8, y: (Math.random() - 0.5) * 8 };
+                this.alpha = 1; this.friction = 0.95;
+            }
+            draw() {
+                ctx.globalAlpha = this.alpha; ctx.beginPath();
+                ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+                ctx.fillStyle = this.color; ctx.fill();
+            }
+            update() {
+                this.velocity.x *= this.friction; this.velocity.y *= this.friction;
+                this.x += this.velocity.x; this.y += this.velocity.y; this.alpha -= 0.01;
+            }
+        }
+        function createFirework() {
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * (canvas.height / 2);
+            const color = `hsl(${Math.random() * 360}, 100%, 60%)`;
+            for (let i = 0; i < 30; i++) particles.push(new Particle(x, y, color));
+        }
+        function animate() {
+            ctx.fillStyle = 'rgba(5, 5, 5, 0.2)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((p, index) => {
+                if (p.alpha > 0) { p.update(); p.draw(); } else particles.splice(index, 1);
+            });
+            requestAnimationFrame(animate);
+        }
+    </script>
+</body>
+</html>
